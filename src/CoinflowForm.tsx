@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { CoinflowPurchase } from "@coinflowlabs/react";
 import { NftSuccessModal } from "./modals/NftSuccessModal";
 import { useWallet } from "./wallet/Wallet.tsx";
@@ -28,7 +28,7 @@ export function CoinflowForm() {
 
 function CoinflowPurchaseWrapper({
   onSuccess,
-                                     subtotal,
+  subtotal,
 }: {
   onSuccess: () => void;
   subtotal: {cents: number;};
@@ -36,19 +36,9 @@ function CoinflowPurchaseWrapper({
   const { wallet, connection } = useWallet();
 
   const [height, setHeight] = useState<number>(0);
-  const [handleHeightChange, setHandleHeightChange] = useState<
-    ((newHeight: string) => void) | undefined
-  >(undefined);
-
   const handleHeight = useCallback((newHeight: string) => {
     setHeight(Number(newHeight));
   }, []);
-
-  useEffect(() => {
-    if (wallet.publicKey) {
-      setHandleHeightChange(() => handleHeight);
-    }
-  }, [handleHeight, wallet]);
 
   return (
     <div className={"h-full flex-1 w-full relative pb-20"}>
@@ -64,17 +54,17 @@ function CoinflowPurchaseWrapper({
         }
       >
         <CoinflowPurchase
-          handleHeightChange={handleHeightChange}
+          handleHeightChange={handleHeight}
           wallet={{
               publicKey: wallet.publicKey,
               sendTransaction: () => {throw new Error('Not Implemented')}
           }}
+          blockchain={"solana"}
           merchantId={"swe-challenge"}
           env={'sandbox'}
           connection={connection}
           onSuccess={onSuccess}
-          amount={subtotal.cents / 100}
-          blockchain={"solana"}
+          subtotal={subtotal}
         />
       </div>
     </div>
