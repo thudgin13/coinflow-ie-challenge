@@ -18,17 +18,20 @@ which securely stores those details so they can be transmitted to Coinflow.
 
 ## Your Task:
 
-Using the existing Battle Brawlers example, remove the CoinflowPurchase SDK and replace it with a PCI compliant 
-implementation which makes checkout calls to Coinflow's APIs. Please implement the following functionality: 
+Using the existing Battle Brawlers example, remove the `CoinflowPurchase` element in this file `src/CoinflowForm.tsx` 
+and replace it with a PCI-compliant implementation which makes API calls directly to Coinflow's APIs. Please implement 
+the following functionality: 
 
 1. New Card Checkout
 2. Saved Card Checkout
 
-To use Coinflow's PCI compliant card input elements follow this receipe: https://www.pcisecuritystandards.org/standards/
+To use Coinflow's PCI-compliant card input elements follow this recipe: https://docs.coinflow.cash/recipes/pci-compliant-credit-card-tokenization
 To call Coinflow's checkout endpoints view the API docs here: https://docs.coinflow.cash/reference/gettotals
 To view test cards and test various scenarios view here: https://docs.coinflow.cash/docs/testing-credit-card-purchases#3ds-enabled-card-purchases
 
-Because the CoinflowPurchase component utilizes the **exact same** endpoints as you will need to call you can use 
+Note: the merchantId you will be using is `swe-challenge`
+
+Hint: Because the `CoinflowPurchase` component utilizes the **exact same** endpoints as you will need to call you can use 
 the SDK with the chrome network debugger tab to figure out which API calls you will need to make, and the necessary data
 to pass.
 
@@ -37,11 +40,11 @@ You will be graded on the following:
 2. Error handing and validation
 3. Code readability
 
-To be respectful of your time this task was designed to be completed in under 2 hours. Please do not hesitate to reach
+To be respectful of your time, this task was designed to be completed in under 2 hours. Please do not hesitate to reach
 out to our integrations engineer Tasha (tasha@coinflowlabs.app) for questions regarding the integration. Please do be
-respectful of her time as well and make sure that your questions are well formed as this will also factor into the grading.
+respectful of her time as well and make sure that your questions are well-formed as this will also factor into the grading.
 
-## Building & Runnning this repo
+## Building & Running this repo
 
 1. Install node v20 ([I like to use NVM](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/))
 2. Change the name of file `.env.example` to `.env`
