@@ -1,8 +1,9 @@
 # Coinflow Software Engineer Take Home
 
-Merchants integrating with Coinflow can opt for one of two different integration methods. They can either utilize 
-Coinflow's prebuilt UI's or integrate directly with APIs. The advantage of using the prebuild UI means that a 
-merchant gets all of Coinflow's features directly out of the box including: 
+Merchants integrating with Coinflow can opt for one of two different integration methods. They can either utilize
+Coinflow's prebuilt UI's or integrate directly with APIs. The advantage of using the prebuild UI means that a
+merchant gets all of Coinflow's features directly out of the box including:
+
 1. New Card Checkout
 2. Saved Card Checkout
 3. Apple Pay
@@ -15,6 +16,7 @@ merchant gets all of Coinflow's features directly out of the box including:
 Using the existing Battle Brawlers example, add the `CoinflowPurchase` element in this file: `src/CoinflowForm.tsx`. Also add the height handler the `CoinflowPurchase` component following this recipe: https://docs.coinflow.cash/recipes/add-dynamic-height-to-a-coinflow-ui-component.
 
 Test the following flows:
+
 1. New Card Checkout
 2. Saved Card Checkout
 3. Google Pay Check
@@ -23,7 +25,8 @@ Test the following flows:
 
 Note: the merchantId you will be using is `swe-challenge`, and the environment is `sandbox`.
 
-You will be graded on the following: 
+You will be graded on the following:
+
 1. Completeness of the task
 2. Error handing and validation
 3. Code readability
@@ -36,9 +39,18 @@ respectful of her time as well and make sure that your questions are well-formed
 
 1. Install node v20 ([I like to use NVM](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/))
 2. Change the name of file `.env.example` to `.env`
-3. In the root directory run: 
+3. In the root directory run:
 4. `npm install`
 5. `npm run build`
 6. `npm run dev`
 
 Changes to the UI will hot refresh/update as you make changes
+
+## My Implementation
+
+1. The `CoinflowPurchase` components has been successfully integrated into the Coinflow Purchase Wrapper with the `onSuccess` function utilizing the provided modal.
+2. I have implemented the autoheight to the `CoinflowPurchase` component
+3. The component depends on `@solana/wallet-adapter-react` `useWallet` Context API. While less DRY, I have utilized the hook within the Purchase component
+   to match access to global state and avoid prop-drilling
+   Future Consideration:
+   Adding a more robust error handling beyond the scope of what is available from the component like connectivity issues to give a more detailed message to the user.

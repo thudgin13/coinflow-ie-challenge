@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback} from "react";
+import { CoinflowPurchase,  } from "@coinflowlabs/react";
+import { Transaction } from "@solana/web3.js";
 import { NftSuccessModal } from "./modals/NftSuccessModal";
 import { useWallet } from "./wallet/Wallet.tsx";
 import { LoadingSpinner } from "./App.tsx";
@@ -15,36 +17,62 @@ export function CoinflowForm() {
     );
 
   return (
-    <div className={"w-full flex-1 "}>
-      <CoinflowPurchaseWrapper
-        onSuccess={() => setNftSuccessOpen(true)}
-        subtotal={{cents: 20_00}}
-      />
+    <>
+        <CoinflowPurchaseWrapper
+          onSuccess={() => setNftSuccessOpen(true)}
+          subtotal={{cents: 20_00}}
+          transaction={undefined} // To be replaced with actual transaction if needed
+        />
+
+ 
       <NftSuccessModal isOpen={nftSuccessOpen} setIsOpen={setNftSuccessOpen} />
-    </div>
+  </>
   );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function CoinflowPurchaseWrapper(_args: {
+interface CoinflowPurchaseWrapperProps {
   onSuccess: () => void;
-  subtotal: {cents: number;};
-}) {
-  // TODO your implementation goes here
-  return (
-    <div className={"h-full flex-1 w-full relative pb-20"}>
-      <div
-        className={"absolute w-full min-h-96 flex items-center justify-center"}
-      >
-        <LoadingSpinner className={"!text-gray-900/20 !fill-gray-900"} />
-      </div>
-      <div
-        className={
-          "flex-col h-full flex mx-auto relative overflow-hidden rounded-none md:rounded-xl md:border border-black/5"
-        }
-      >
+  subtotal: {cents: number};
+  transaction: Transaction | undefined;
+}
 
-      </div>
+function CoinflowPurchaseWrapper({
+  onSuccess,
+  subtotal,
+  transaction,
+}: CoinflowPurchaseWrapperProps) {
+  const { wallet, connection } = useWallet();
+  const [height, setHeight] = useState<number>(0);
+
+  const handleHeight = useCallback((newHeight: string) => {
+    const parsedHeight = parseFloat(newHeight);
+    if (!isNaN(parsedHeight)) {
+      setHeight(parsedHeight);
+    } else {
+      console.warn("CoinflowPurchaseWrapper: Received invalid height string:", newHeight);
+      setHeight(0);
+    }
+  }, []);
+
+  if (!wallet || !wallet.publicKey || !connection) {
+    return null; //This should be handled by the parent container, but just in case we've added a fallback here.
+  }
+  return (
+    <div  style={{ height: `${height}px` }} className={"h-full flex-1 w-full relative pb-20"}>
+      <CoinflowPurchase
+        wallet={wallet}
+        merchantId={"swe-challenge"}
+        env={"sandbox"}
+        connection={connection} 
+        onSuccess={onSuccess} 
+        transaction={transaction} 
+        blockchain={"solana"}
+        {...(subtotal?.cents > 0 && { subtotal })} //If cents is not defined, custom amount will be allowed
+        loaderBackground={"#FFFFFF"}
+        handleHeightChange={handleHeight}
+        chargebackProtectionData={[]}
+        />
     </div>
   );
 }
